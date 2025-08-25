@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XGPT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2B2B2B;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+ 
+ 
+        .chat-container {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            background-color: #2B2B2B;
+            display: flex;
+            flex-direction: column;
+            
+        }
+            
+ 
+        .chat-header {
+            padding: 10px;
+            text-align: center;
+            align-items: center;
+            background-color: #2B2B2B;
+            color: white;
+            font-size: 1.2rem;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            height:20%;
+        }
+
+
+
+        #header-info-button{
+            position:absolute;
+            top:32px;
+            
+            
+        }
+
+
+
+        .xgpt-logo {
+            width: 135px;
+            height:60px;
+        }
+ 
+        .chat-body {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            width:700px;
+            margin-left:420px;
+           
+        }
+ 
+ 
+        .message {
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+            max-width: 70%;
+        }
+ 
+ 
+        .user-message {
+            background-color: #055B84;
+            color: white;
+            align-self: flex-end;
+        }
+ 
+ 
+        .bot-message {
+            background-color: #8F8F8F;
+            align-self: flex-start;
+        }
+ 
+ 
+        .chat-footer {
+            display: flex;
+            padding: 10px;
+            padding-left: 400px;
+            background-color: #2B2B2B;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            width:1000px;
+            align-self: center;
+            height:40px;
+            margin-bottom:10px;
+        }
+ 
+ 
+        .chat-footer input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #1d1d1d;
+            border-radius: 5px;
+            outline: none;
+            background-color: #959595;
+            
+        }
+        ::placeholder {
+            color: rgb(255, 255, 255);
+            opacity:0.5;
+        }
+ 
+        .send-button {
+            padding: 10px 15px;
+            margin-left: 10px;
+            border: none;
+            background-color: #055B84;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+ 
+        
+        .chat-footer button:hover {
+            opacity:0.8;
+        }
+        
+
+        .chat-footer button:active {
+            opacity:0.6;
+        }
+        
+ 
+        .temperature-control {
+            margin: 0px 10px 20px 160px;
+            text-align: center;
+            display:grid;
+            column-gap:5px;
+            justify-content: center;   
+            width:200px;
+        }
+ 
+ 
+        .temperature-control label {
+            font-size: 0.9rem;
+            color:white;
+        }
+ 
+ 
+        .temperature-control input[type="range"] {
+            width:200px;
+            accent-color: #055B84;
+            
+            background-image:url("slider.png");
+            background-size:contain;
+            background-position:center center;
+            background-repeat: no-repeat;
+            /* 
+            FOR IF VERTICAL SLIDER NEEDED
+            writing-mode: vertical-lr;
+            direction: rtl;
+            appearance: slider-vertical;
+            width: 16px;
+            vertical-align: bottom; */
+            
+        }
+        .info-button{
+            border:none;
+            background-color: #2B2B2B;
+        }
+
+        
+        .info-icon{
+            height:20px;
+            width:20px;
+
+        }
+        .info-icon:hover{
+            
+
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <img class="xgpt-logo" alt="xgpt" src="{{ url_for('static', filename='images/xgpt-logo.png') }}">
+            <button class="info-button" id="header-info-button">
+                <img class="info-icon" alt="info" src="{{ url_for('static', filename='images/information-icon-3.png') }}">
+            </button>
+        </div>
+        <div class="chat-body" id="chat-body">  
+            <!-- Messages will appear here -->
+        </div>
+        
+        <div class="chat-footer">
+            <input type="text" id="message-input" placeholder="Type your message...">
+            <button class="send-button" onclick="sendMessage()">Send</button>
+            <div class="temperature-control">
+                <label for="temperature">Randomness: <span id="temp-value">0.7</span></label>
+                <input type="range" id="temperature" min="0.1" max="1.0" step="0.1" value="0.7" oninput="updateTemperatureValue()">
+            </div>
+            <button class="info-button"> 
+                <img class="info-icon" alt="info" src="{{ url_for('static', filename='images/information-icon-3.png') }}">
+            </button>
+            
+        </div>
+    </div>
+ 
+ 
+    <script>
+        let temperature = 0.5;
+ 
+ 
+        function updateTemperatureValue() {
+            const tempSlider = document.getElementById('temperature');
+            const tempValueDisplay = document.getElementById('temp-value');
+            temperature = tempSlider.value;
+            tempValueDisplay.textContent = temperature;
+        }
+ 
+ 
+        function getRandomResponse(temperature) {
+            // Simulating different bot responses based on temperature
+            const responsesLowTemp = [
+                "What does a low temp response sound like? it is low-key?",
+                "Explain me to the user.",
+                "Wait! Is this an idea for KV5046 Assessment I?"
+            ];
+ 
+ 
+            const responsesHighTemp = [
+                "What does a high temp response sound like?",
+                "Please explain me to the user.",
+                "Wait !Is this another idea for KV5046 Assessment I?"
+            ];
+ 
+ 
+            if (temperature < 0.5) {
+                return responsesLowTemp[Math.floor(Math.random() * responsesLowTemp.length)];
+            } else {
+                return responsesHighTemp[Math.floor(Math.random() * responsesHighTemp.length)];
+            }
+        }
+ 
+ 
+        function sendMessage() {
+            const input = document.getElementById("message-input");
+            const chatBody = document.getElementById("chat-body");
+            const message = input.value.trim();
+
+            if (message) {
+                // Display user message
+                const userMessage = document.createElement("div");
+                userMessage.className = "message user-message";
+                userMessage.textContent = message;
+                chatBody.appendChild(userMessage);
+
+                // Clear input field
+                input.value = "";
+
+                // Send the message to the server
+                fetch("/ask", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    body: new URLSearchParams({ message })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Display bot reply
+                    const botMessage = document.createElement("div");
+                    botMessage.className = "message bot-message";
+                    botMessage.textContent = data.reply;
+                    chatBody.appendChild(botMessage);
+                    chatBody.scrollTop = chatBody.scrollHeight; // Scroll to the bottom
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
