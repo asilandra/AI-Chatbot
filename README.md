@@ -1,15 +1,26 @@
+```markdown
 # AI-Chatbot Web Application
 
 A full-stack web application that replicates the core functionality and user experience of modern AI chatbots like ChatGPT. This was a collaborative university group project.
 
-##  Technologies Used
+## Technologies Used
 
 *   **Front-end:** HTML, CSS, JavaScript
-*   **Back-end:** Python (Flask/Django)
+*   **Back-end:** Python (Flask)
 *   **API Integration:** OpenAI GPT API
 *   **NLP:** Prompt engineering, response handling
 
-##  My Role & Contribution
+## Project Structure
+├── app.py # Main Flask application
+├── requirements.txt # Python dependencies
+├── .gitignore # Files to be ignored by Git
+├── static/ # Static files (CSS, JS, images)
+│ └── images/
+├── templates/ # HTML templates
+└── README.md # Project documentation
+
+
+## My Role & Contribution
 
 As a key contributor to this group project, my primary responsibilities encompassed the full-stack development of the application:
 
@@ -18,11 +29,13 @@ As a key contributor to this group project, my primary responsibilities encompas
 *   **Back-End API Integration:** Built the Python-based back-end logic to connect the web client to the **OpenAI API**, managing all request/response cycles.
 *   **Core Functionality:** Developed the logic for processing user inputs, constructing effective prompts, and handling the AI-generated responses to ensure a seamless conversation flow.
 
-##  How to Run
+## How to Run
 
-1.  Ensure Python 3.x and Node.js are installed.
-2.  Install required libraries: `pip install flask openai`
+1.  Ensure Python 3.x is installed.
+2.  Install required libraries: `pip install -r requirements.txt`
 3.  Clone this repository.
-4.  Add your OpenAI API key to the environment variables.
+4.  **Add your OpenAI API key:**
+    *   Create a file named `.env` in the root directory.
+    *   Add your key: `OPENAI_API_KEY="your-key-here"`
 5.  Start the back-end server: `python app.py`
 6.  Open `index.html` in your web browser or start the front-end dev server.
